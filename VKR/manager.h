@@ -4,13 +4,14 @@
 #include <QMainWindow>
 #include <QDesktopWidget>
 #include <QFileSystemModel>
-#include "QDirModel"
-#include "QTreeView"
-#include "QFileSystemModel"
-#include "QtGui"
-#include "QtCore"
-#include "QDir"
+#include <QDirModel>
+#include <QTreeView>
+#include <QFileSystemModel>
+#include <QtGui>
+#include <QtCore>
+#include <QDir>
 #include <QDebug>
+#include "file_system.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Manager; }
@@ -28,7 +29,7 @@ public:
 
 private:
     Ui::Manager *ui;
-    QRect scr;
     QFileSystemModel *filemodel;
+    File_System file_system;
 };
 #endif // MANAGER_H
