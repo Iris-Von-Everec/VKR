@@ -9,13 +9,13 @@ Manager::Manager(QWidget *parent)
     this->setGeometry(0, 0, 1920, 1080);
     this->showMaximized();
 
-    QString sPath ="c:/";
+    QString sPath ="";
     filemodel = new QFileSystemModel(this);
     filemodel->setFilter(QDir::Files | QDir::AllDirs | QDir::NoDotAndDotDot);
     filemodel->setNameFilterDisables(false);
     filemodel->setRootPath(sPath);
-    ui->file_system->setModel(filemodel);
-    ui->file_system->setRootIndex(filemodel->setRootPath(sPath));
+    ui->tree_view->setModel(filemodel);
+    ui->tree_view->setRootIndex(filemodel->setRootPath(sPath));
     file_system.CreateDir();
 }
 
