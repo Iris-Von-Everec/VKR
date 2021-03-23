@@ -3,6 +3,13 @@
 
 #include <QMainWindow>
 #include <QDesktopWidget>
+#include <QFileSystemModel>
+#include "QDirModel"
+#include "QTreeView"
+#include "QFileSystemModel"
+#include "QtGui"
+#include "QtCore"
+#include "QDir"
 #include <QDebug>
 
 QT_BEGIN_NAMESPACE
@@ -22,5 +29,6 @@ public:
 private:
     Ui::Manager *ui;
     QRect scr;
+    QFileSystemModel *filemodel;
 };
 #endif // MANAGER_H
