@@ -21,15 +21,23 @@ class Manager : public QMainWindow
 {
     Q_OBJECT
 
-public:
+  public:
     Manager(QWidget *parent = nullptr);
     ~Manager();
     void Initialization();
     void Debug__();
+    void closeEvent(QCloseEvent *event);
+
+  private slots:
+    void clicked_exit();
+    void on_tree_view_activated(const QModelIndex &index);
+    void on_tree_view_clicked(const QModelIndex &index);
 
 private:
     Ui::Manager *ui;
-    QFileSystemModel *filemodel;
-    File_System file_system;
+    QFileSystemModel *dirs_model, *files_model;
+    File_System f_system;
+    QString start_path, current_path;
+    QAction *exit;
 };
 #endif // MANAGER_H

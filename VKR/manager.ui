@@ -17,15 +17,25 @@
    <widget class="QTreeView" name="tree_view">
     <property name="geometry">
      <rect>
-      <x>140</x>
-      <y>10</y>
-      <width>1771</width>
+      <x>0</x>
+      <y>0</y>
+      <width>621</width>
       <height>1031</height>
      </rect>
     </property>
     <attribute name="headerDefaultSectionSize">
-     <number>300</number>
+     <number>150</number>
     </attribute>
+   </widget>
+   <widget class="QListView" name="listView">
+    <property name="geometry">
+     <rect>
+      <x>620</x>
+      <y>0</y>
+      <width>551</width>
+      <height>1031</height>
+     </rect>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -37,8 +47,26 @@
      <height>21</height>
     </rect>
    </property>
+   <widget class="QMenu" name="File">
+    <property name="title">
+     <string>Файл</string>
+    </property>
+    <addaction name="Create_Tag"/>
+   </widget>
+   <widget class="QMenu" name="Spravka">
+    <property name="title">
+     <string>Справка</string>
+    </property>
+   </widget>
+   <addaction name="File"/>
+   <addaction name="Spravka"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="Create_Tag">
+   <property name="text">
+    <string>Создать тег</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>
