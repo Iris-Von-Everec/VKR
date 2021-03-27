@@ -1,0 +1,14 @@
+{
+    "Tag_1": {
+        "File Name 1": {
+            "Hash sum": "qwerty12345",
+            "Path": "C:/Users/danyb/Documents/GitHub/VKR/VKR",
+            "type": ".json"
+        },
+        "File Name 2": {
+            "Hash sum": "zxcmd5sum",
+            "Path": "C:/Users/danyb/Documents/GitHub/VKR/VKR",
+            "type": ".txt"
+        }
+    }
+}

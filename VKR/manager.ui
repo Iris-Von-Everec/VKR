@@ -24,7 +24,7 @@
      </rect>
     </property>
     <attribute name="headerDefaultSectionSize">
-     <number>150</number>
+     <number>180</number>
     </attribute>
    </widget>
    <widget class="QListView" name="listView">
@@ -110,6 +110,14 @@
      <string>Файл</string>
     </property>
     <addaction name="Create_Tag"/>
+    <addaction name="action_2"/>
+    <addaction name="action_3"/>
+    <addaction name="action_4"/>
+    <addaction name="separator"/>
+    <addaction name="action_1"/>
+    <addaction name="action_6"/>
+    <addaction name="action_7"/>
+    <addaction name="action_8"/>
    </widget>
    <widget class="QMenu" name="Spravka">
     <property name="title">
@@ -122,7 +130,42 @@
   <widget class="QStatusBar" name="statusbar"/>
   <action name="Create_Tag">
    <property name="text">
-    <string>Создать тег</string>
+    <string>Действие 1</string>
+   </property>
+  </action>
+  <action name="action_2">
+   <property name="text">
+    <string>Действие 2</string>
+   </property>
+  </action>
+  <action name="action_3">
+   <property name="text">
+    <string>Действие 3</string>
+   </property>
+  </action>
+  <action name="action_4">
+   <property name="text">
+    <string>Действие 4</string>
+   </property>
+  </action>
+  <action name="action_1">
+   <property name="text">
+    <string>Другое действие 1</string>
+   </property>
+  </action>
+  <action name="action_6">
+   <property name="text">
+    <string>Другое действие 2</string>
+   </property>
+  </action>
+  <action name="action_7">
+   <property name="text">
+    <string>Другое действие 3</string>
+   </property>
+  </action>
+  <action name="action_8">
+   <property name="text">
+    <string>Другое действие 4</string>
    </property>
   </action>
  </widget>

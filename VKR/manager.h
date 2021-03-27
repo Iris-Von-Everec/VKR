@@ -14,6 +14,8 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QJsonArray>
+#include <QJsonValue>
+#include <QJsonParseError>
 #include <QFile>
 
 QT_BEGIN_NAMESPACE
@@ -32,6 +34,7 @@ class Manager : public QMainWindow
     void write_json(); // запись json, переместить в нужный класс из Manager
     void Debug__();
     void closeEvent(QCloseEvent *event);
+    void check_sum_of_files();
 
   private slots:
     void clicked_exit();
@@ -41,7 +44,8 @@ class Manager : public QMainWindow
 private:
     Ui::Manager *ui;
     QFileSystemModel *dirs_model, *files_model;
-    QString start_path, current_path;
+    QString start_path, current_path, json_path, json_string;
     QAction *exit;
+    QFile json_file;
 };
 #endif // MANAGER_H

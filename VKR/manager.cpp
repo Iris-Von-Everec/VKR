@@ -26,6 +26,12 @@ Manager::Manager(QWidget *parent)
     exit = new QAction("Выход", this);
     ui->menubar->addAction(exit);
     connect(exit, SIGNAL(triggered()), this, SLOT(clicked_exit()));
+
+    json_path = PRO_FILE_PWD;
+    json_path.append("/test1.json");
+    qDebug() << json_path;
+   // write_json();
+    read_json();
 }
 
 Manager::~Manager()
@@ -36,7 +42,7 @@ Manager::~Manager()
 
 void Manager::Initialization()
 {
- // зачем?
+ // зачем? Инициализация подклассов
 }
 
 void Manager::clicked_exit()
@@ -47,6 +53,7 @@ void Manager::clicked_exit()
 void Manager::Debug__()
 {
  // отладка
+ // qDebug() << PRO_FILE_PWD;
 }
 
 void Manager::closeEvent(QCloseEvent *event)
@@ -63,32 +70,69 @@ void Manager::on_tree_view_activated(const QModelIndex &index)
 void Manager::on_tree_view_clicked(const QModelIndex &index)
 {
    current_path = dirs_model->filePath(index);
-   qDebug() << current_path;
+ //  qDebug() << current_path;
  //  qDebug() << index.data().toString();
    files_model->setRootPath(current_path);
    ui->listView->setRootIndex(files_model->setRootPath(current_path));
 }
 
+void Manager::read_json()
+{
+  QString value;
+  json_file.setFileName(json_path);
+  json_file.open(QIODevice::ReadOnly | QIODevice::Text);
+  value = json_file.readAll();
+  json_file.close();
+  QJsonDocument document = QJsonDocument::fromJson(value.toUtf8());
+  QJsonObject json_obj = document.object();
+  QJsonValue json_value = json_obj.value("Tag_1");
+  if (json_value.isObject())
+  {
+      QJsonObject file_obj = json_value.toObject();
+      QJsonValue file_value = file_obj.value("File Name 1");
+      if (file_value.isObject())
+        {
+          QJsonObject final_obj = file_value.toObject();
+          QString hash_sum = final_obj["Hash sum"].toString();
+          QString file_path = final_obj["Path"].toString();
+          QString file_type = final_obj["type"].toString();
+          qDebug() << hash_sum << file_path << file_type << "\n";
+        }
+      else
+        qDebug() << "Не считалось 2\n";
+  }
+  else
+    qDebug() << "Не считалось 1\n";
+}
+
+void Manager::check_sum_of_files()
+{
+
+}
+
 void Manager::write_json()
 {
-  QJsonObject recordObject;
-  recordObject.insert("Test1", QJsonValue::fromVariant("1"));
-  recordObject.insert("Test2", QJsonValue::fromVariant(123.4));
-  recordObject.insert("Test3", QJsonValue::fromVariant(43));
-  recordObject.insert("Test4", QJsonValue::fromVariant(true));
-  recordObject.insert("Test5",   QJsonValue::fromVariant(QByteArray("1,2,3,4,5")));
-  QJsonArray numbersArray;
+  QJsonObject json_obj, json_tagObj, json_subObj; // пока что без иерархии
+  json_subObj.insert("Hash sum", "qwerty12345");
+  json_subObj.insert("Path", PRO_FILE_PWD);
+  json_subObj.insert("type", ".json");
+  json_tagObj.insert("File Name 1", json_subObj);
+  json_obj.insert("Tag_1", json_tagObj);
+  json_subObj.insert("Hash sum", "zxcmd5sum");
+  json_subObj.insert("Path", PRO_FILE_PWD);
+  json_subObj.insert("type", ".txt");
+  json_tagObj.insert("File Name 2", json_subObj);
+  json_obj.insert("Tag_1", json_tagObj);
+  /*QJsonArray numbersArray;x
   numbersArray.push_back("1");
   numbersArray.push_back("2");
-  numbersArray.push_back("3");
-  recordObject.insert("Test6",numbersArray);
-  QJsonDocument doc(recordObject);
-  QString jsonString = doc.toJson(QJsonDocument::Indented);
+  numbersArray.push_back("3"); */
+  QJsonDocument document(json_obj);
+  json_string = document.toJson(QJsonDocument::Indented);
   //Записываем данные в файл
-  QFile file;
-  file.setFileName("test1.json");
-  file.open(QIODevice::WriteOnly | QIODevice::Text);
-  QTextStream stream( &file );
-  stream << jsonString;
-  file.close();
+  json_file.setFileName(json_path);
+  json_file.open(QIODevice::WriteOnly | QIODevice::Text);
+  QTextStream stream(&json_file);
+  stream << json_string;
+  json_file.close();
 }
