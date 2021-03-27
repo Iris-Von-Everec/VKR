@@ -47,5 +47,7 @@ private:
     QString start_path, current_path, json_path, json_string;
     QAction *exit;
     QFile json_file;
+
+    QString hash_sum; //временно для проверки сравнения хэша
 };
 #endif // MANAGER_H

@@ -32,6 +32,7 @@ Manager::Manager(QWidget *parent)
     qDebug() << json_path;
    // write_json();
     read_json();
+    check_sum_of_files();
 }
 
 Manager::~Manager()
@@ -93,10 +94,10 @@ void Manager::read_json()
       if (file_value.isObject())
         {
           QJsonObject final_obj = file_value.toObject();
-          QString hash_sum = final_obj["Hash sum"].toString();
+          hash_sum = final_obj["Hash sum"].toString();
           QString file_path = final_obj["Path"].toString();
           QString file_type = final_obj["type"].toString();
-          qDebug() << hash_sum << file_path << file_type << "\n";
+      //    qDebug() << hash_sum << file_path << file_type << "\n";
         }
       else
         qDebug() << "Не считалось 2\n";
@@ -105,9 +106,25 @@ void Manager::read_json()
     qDebug() << "Не считалось 1\n";
 }
 
+// Возвращает пустой QByteArray() в случае ошибки
+QByteArray fileChecksum(const QString &fileName, QCryptographicHash::Algorithm hashAlgorithm)
+  {
+    QFile f(fileName);
+    if (f.open(QFile::ReadOnly)) {
+        QCryptographicHash hash(hashAlgorithm);
+        if (hash.addData(&f)) {
+            return hash.result();
+        }
+    }
+    return QByteArray();
+  }
+
 void Manager::check_sum_of_files()
 {
-
+  QByteArray file_hash_array;
+  file_hash_array = fileChecksum(json_path, QCryptographicHash::Md5);
+  QString hash_string = QString(file_hash_array);
+  qDebug() << hash_string;
 }
 
 void Manager::write_json()
