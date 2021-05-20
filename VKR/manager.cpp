@@ -6,39 +6,123 @@ Manager::Manager(QWidget *parent)
     , ui(new Ui::Manager)
 {
     ui->setupUi(this);
-    start_path = "";
-    dirs_model = new QFileSystemModel(this);
-    dirs_model->setFilter(QDir::AllDirs | QDir::NoDotAndDotDot);
-    dirs_model->setNameFilterDisables(false);
-    dirs_model->setRootPath(start_path);
-    ui->tree_view->setModel(dirs_model);
-    ui->tree_view->setRootIndex(dirs_model->setRootPath(start_path));
 
-    files_model = new QFileSystemModel(this);
-    files_model->setFilter(QDir::Files);
-    files_model->setNameFilterDisables(false);
-    files_model->setRootPath(start_path);
-    ui->listView->setModel(files_model);
-    ui->listView->setRootIndex(files_model->setRootPath(start_path));
 
-    this->setGeometry(0, 0, 1920, 1080);
-    this->showMaximized();
+    /* кусок кода с тестом парсинга json
+    json_path = PRO_FILE_PWD;
+    json_path.append("/test1.json");
+    qDebug() << json_path;
+    write_json();
+    read_json();
+    check_sum_of_files(); */
+
+    // кнопка выхода в статус баре
     exit = new QAction("Выход", this);
     ui->menubar->addAction(exit);
     connect(exit, SIGNAL(triggered()), this, SLOT(clicked_exit()));
 
-    json_path = PRO_FILE_PWD;
-    json_path.append("/test1.json");
-    qDebug() << json_path;
-   // write_json();
-    read_json();
-    check_sum_of_files();
+    // получение значения разрешения основного монитора
+    scr_size = QApplication::screens().at(0)->availableSize();
+    this->setMinimumSize(scr_size.rwidth() / 2, scr_size.rheight() / 2); // минимальный размер по ширине и высоте - половина
+
+    // получение размеров главного виджета окна
+    main_size = ui->centralwidget->geometry();
+
+    QString str = PRO_FILE_PWD;
+
+    // info
+    info_widget = new QWidget;
+    info_widget->setMinimumWidth(scr_size.rheight() / 14);
+    info_widget->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
+    info_panel = new QVBoxLayout;
+    Set_info_panel();
+    info_widget->setLayout(info_panel);
+    info_widget->setStyleSheet("background-color:green;");
+
+    // content
+    content_widget = new QWidget;
+    content_widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    QPalette Pal(palette());
+    str.append("/background.png");
+    QImage back(str);
+    Pal.setBrush(QPalette::Background, back);
+    content_widget->setAutoFillBackground(true);
+    content_widget->setPalette(Pal);
+
+    main_layout = new QHBoxLayout;
+    main_layout->addWidget(info_widget);
+    main_layout->addWidget(content_widget);
+
+    ui->centralwidget->setLayout(main_layout); // добавление основного layout на центральный виджет
 }
 
 Manager::~Manager()
 {
   delete exit;
   delete ui;
+}
+
+void Manager::Set_info_panel()
+{
+  int size = info_widget->minimumWidth();
+  const QSize btnSize = QSize(size, size);
+  QString str;
+
+  // 1
+  str = PRO_FILE_PWD;
+  str.append("/add.png");
+  button1 = new QPushButton;
+  button1->setFixedSize(btnSize);
+  button1->setIcon(QIcon(str));
+  button1->setIconSize(btnSize);
+  button1->setStyleSheet("border: 0px");
+  info_panel->addWidget(button1);
+
+  // 2
+  str = PRO_FILE_PWD;
+  str.append("/hard.jpg");
+  button2 = new QPushButton;
+  button2->setFixedSize(btnSize);
+  button2->setIcon(QIcon(str));
+  button2->setIconSize(btnSize);
+  button2->setStyleSheet("border: 0px");
+  info_panel->addWidget(button2);
+
+  // 3
+  str = PRO_FILE_PWD;
+  str.append("/add.png");
+  button3 = new QPushButton;
+  button3->setFixedSize(btnSize);
+  button3->setIcon(QIcon(str));
+  button3->setIconSize(btnSize);
+  button3->setStyleSheet("border: 0px");
+  info_panel->addWidget(button3);
+
+  // 4
+  str = PRO_FILE_PWD;
+  str.append("/add.png");
+  button4 = new QPushButton;
+  button4->setFixedSize(btnSize);
+  button4->setIcon(QIcon(str));
+  button4->setIconSize(btnSize);
+  button4->setStyleSheet("border: 0px");
+  info_panel->addWidget(button4);
+
+  // 5
+  str = PRO_FILE_PWD;
+  str.append("/add.png");
+  button5 = new QPushButton;
+  button5->setFixedSize(btnSize);
+  button5->setIcon(QIcon(str));
+  button5->setIconSize(btnSize);
+  button5->setStyleSheet("border: 0px");
+  info_panel->addWidget(button5);
+
+  connect(button1, SIGNAL(clicked()), this, SLOT(button1_clicked()));
+  connect(button2, SIGNAL(clicked()), this, SLOT(button2_clicked()));
+  connect(button3, SIGNAL(clicked()), this, SLOT(button3_clicked()));
+  connect(button4, SIGNAL(clicked()), this, SLOT(button4_clicked()));
+  connect(button5, SIGNAL(clicked()), this, SLOT(button5_clicked()));
 }
 
 void Manager::Initialization()
@@ -51,30 +135,46 @@ void Manager::clicked_exit()
   this->close();
 }
 
+void Manager::button1_clicked()
+{
+  qDebug() << "Кнопка 1";
+}
+
+void Manager::button2_clicked()
+{
+  qDebug() << "Кнопка 2";
+}
+
+void Manager::button3_clicked()
+{
+  qDebug() << "Кнопка 3";
+}
+
+void Manager::button4_clicked()
+{
+  qDebug() << "Кнопка 4";
+}
+
+void Manager::button5_clicked()
+{
+  qDebug() << "Кнопка 5";
+}
+
 void Manager::Debug__()
 {
- // отладка
  // qDebug() << PRO_FILE_PWD;
+}
+
+void Manager::resizeEvent(QResizeEvent* event)
+{
+  main_size = ui->centralwidget->geometry();
+  qDebug() << main_size.x() << main_size.y() << main_size.width() << main_size.height();
 }
 
 void Manager::closeEvent(QCloseEvent *event)
 {
   // do some data saves or something else
   qApp->quit();
-}
-
-void Manager::on_tree_view_activated(const QModelIndex &index)
-{
-   // qDebug() << "Да";
-}
-
-void Manager::on_tree_view_clicked(const QModelIndex &index)
-{
-   current_path = dirs_model->filePath(index);
- //  qDebug() << current_path;
- //  qDebug() << index.data().toString();
-   files_model->setRootPath(current_path);
-   ui->listView->setRootIndex(files_model->setRootPath(current_path));
 }
 
 void Manager::read_json()

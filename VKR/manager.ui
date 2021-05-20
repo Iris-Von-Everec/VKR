@@ -2,106 +2,27 @@
 <ui version="4.0">
  <class>Manager</class>
  <widget class="QMainWindow" name="Manager">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1920</width>
-    <height>1080</height>
+    <width>1000</width>
+    <height>600</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Manager</string>
   </property>
-  <widget class="QWidget" name="centralwidget">
-   <widget class="QTreeView" name="tree_view">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>30</y>
-      <width>640</width>
-      <height>1011</height>
-     </rect>
-    </property>
-    <attribute name="headerDefaultSectionSize">
-     <number>180</number>
-    </attribute>
-   </widget>
-   <widget class="QListView" name="listView">
-    <property name="geometry">
-     <rect>
-      <x>640</x>
-      <y>30</y>
-      <width>640</width>
-      <height>1011</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QListView" name="listView_2">
-    <property name="geometry">
-     <rect>
-      <x>1280</x>
-      <y>30</y>
-      <width>640</width>
-      <height>1011</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>200</x>
-      <y>10</y>
-      <width>141</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Просмотр папок</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_2">
-    <property name="geometry">
-     <rect>
-      <x>820</x>
-      <y>10</y>
-      <width>231</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Просмотр файлов в выбранной папке</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_3">
-    <property name="geometry">
-     <rect>
-      <x>1490</x>
-      <y>10</y>
-      <width>231</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Просмотр файлов с тегами</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
-  </widget>
+  <widget class="QWidget" name="centralwidget"/>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1920</width>
+     <width>1000</width>
      <height>21</height>
     </rect>
    </property>
@@ -109,15 +30,6 @@
     <property name="title">
      <string>Файл</string>
     </property>
-    <addaction name="Create_Tag"/>
-    <addaction name="action_2"/>
-    <addaction name="action_3"/>
-    <addaction name="action_4"/>
-    <addaction name="separator"/>
-    <addaction name="action_1"/>
-    <addaction name="action_6"/>
-    <addaction name="action_7"/>
-    <addaction name="action_8"/>
    </widget>
    <widget class="QMenu" name="Spravka">
     <property name="title">
@@ -128,46 +40,6 @@
    <addaction name="Spravka"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="Create_Tag">
-   <property name="text">
-    <string>Действие 1</string>
-   </property>
-  </action>
-  <action name="action_2">
-   <property name="text">
-    <string>Действие 2</string>
-   </property>
-  </action>
-  <action name="action_3">
-   <property name="text">
-    <string>Действие 3</string>
-   </property>
-  </action>
-  <action name="action_4">
-   <property name="text">
-    <string>Действие 4</string>
-   </property>
-  </action>
-  <action name="action_1">
-   <property name="text">
-    <string>Другое действие 1</string>
-   </property>
-  </action>
-  <action name="action_6">
-   <property name="text">
-    <string>Другое действие 2</string>
-   </property>
-  </action>
-  <action name="action_7">
-   <property name="text">
-    <string>Другое действие 3</string>
-   </property>
-  </action>
-  <action name="action_8">
-   <property name="text">
-    <string>Другое действие 4</string>
-   </property>
-  </action>
  </widget>
  <resources/>
  <connections/>
