@@ -24,9 +24,7 @@ Manager::Manager(QWidget *parent)
     // получение значения разрешения основного монитора
     scr_size = QApplication::screens().at(0)->availableSize();
     this->setMinimumSize(scr_size.rwidth() / 2, scr_size.rheight() / 2); // минимальный размер по ширине и высоте - половина
-
-    // получение размеров главного виджета окна
-    main_size = ui->centralwidget->geometry();
+    this->setStyleSheet("color: black;");
 
     QString str = PRO_FILE_PWD;
 
@@ -34,31 +32,59 @@ Manager::Manager(QWidget *parent)
     info_widget = new QWidget;
     info_widget->setMinimumWidth(scr_size.rheight() / 14);
     info_widget->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
-    info_panel = new QVBoxLayout;
+    info_layout = new QVBoxLayout;
     Set_info_panel();
-    info_widget->setLayout(info_panel);
-    info_widget->setStyleSheet("background-color:green;");
+    info_widget->setLayout(info_layout);
+   // this->setStyleSheet("background-color:black;");
+   // info_widget->setStyleSheet("background-color: black;");
 
     // content
-    content_widget = new QWidget;
+    content_widget = new QStackedWidget;
     content_widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     QPalette Pal(palette());
+    str = PRO_FILE_PWD;
     str.append("/background.png");
     QImage back(str);
     Pal.setBrush(QPalette::Background, back);
-    content_widget->setAutoFillBackground(true);
-    content_widget->setPalette(Pal);
+    ui->centralwidget->setAutoFillBackground(true);
+    ui->centralwidget->setPalette(Pal);
+
+    // стек виджетов
+    empty_widget = new QWidget;
+    content_widget->addWidget(empty_widget);
+
+    tree_view = new QTreeView;
+    tree_view->setModel(controller.Get_File_system());
+    tree_view->setRootIndex(controller.Get_File_system()->index("/"));
+
+    connect(tree_view, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(get_full_path(const QModelIndex &)));
+    content_widget->addWidget(tree_view);
 
     main_layout = new QHBoxLayout;
     main_layout->addWidget(info_widget);
     main_layout->addWidget(content_widget);
+    main_layout->setContentsMargins(0, 0, 0, 0);
+    main_layout->setSpacing(0);
 
     ui->centralwidget->setLayout(main_layout); // добавление основного layout на центральный виджет
+    ui->statusbar->showMessage("Выберите действие");
+   // this->showMaximized();
 }
 
 Manager::~Manager()
 {
   delete exit;
+  delete button1;
+  delete button2;
+  delete button3;
+  delete button4;
+  delete button5;
+  delete info_layout;
+  delete info_widget;
+  delete empty_widget;
+  delete tree_view;
+  delete content_widget;
+  delete main_layout;
   delete ui;
 }
 
@@ -70,13 +96,13 @@ void Manager::Set_info_panel()
 
   // 1
   str = PRO_FILE_PWD;
-  str.append("/add.png");
+  str.append("/home.png");
   button1 = new QPushButton;
   button1->setFixedSize(btnSize);
   button1->setIcon(QIcon(str));
   button1->setIconSize(btnSize);
   button1->setStyleSheet("border: 0px");
-  info_panel->addWidget(button1);
+  info_layout->addWidget(button1);
 
   // 2
   str = PRO_FILE_PWD;
@@ -86,7 +112,7 @@ void Manager::Set_info_panel()
   button2->setIcon(QIcon(str));
   button2->setIconSize(btnSize);
   button2->setStyleSheet("border: 0px");
-  info_panel->addWidget(button2);
+  info_layout->addWidget(button2);
 
   // 3
   str = PRO_FILE_PWD;
@@ -96,7 +122,7 @@ void Manager::Set_info_panel()
   button3->setIcon(QIcon(str));
   button3->setIconSize(btnSize);
   button3->setStyleSheet("border: 0px");
-  info_panel->addWidget(button3);
+  info_layout->addWidget(button3);
 
   // 4
   str = PRO_FILE_PWD;
@@ -106,7 +132,7 @@ void Manager::Set_info_panel()
   button4->setIcon(QIcon(str));
   button4->setIconSize(btnSize);
   button4->setStyleSheet("border: 0px");
-  info_panel->addWidget(button4);
+  info_layout->addWidget(button4);
 
   // 5
   str = PRO_FILE_PWD;
@@ -116,7 +142,7 @@ void Manager::Set_info_panel()
   button5->setIcon(QIcon(str));
   button5->setIconSize(btnSize);
   button5->setStyleSheet("border: 0px");
-  info_panel->addWidget(button5);
+  info_layout->addWidget(button5);
 
   connect(button1, SIGNAL(clicked()), this, SLOT(button1_clicked()));
   connect(button2, SIGNAL(clicked()), this, SLOT(button2_clicked()));
@@ -138,11 +164,15 @@ void Manager::clicked_exit()
 void Manager::button1_clicked()
 {
   qDebug() << "Кнопка 1";
+  content_widget->setCurrentIndex(0);
+  ui->statusbar->showMessage("Выберите действие");
 }
 
 void Manager::button2_clicked()
 {
   qDebug() << "Кнопка 2";
+  content_widget->setCurrentIndex(1);
+  ui->statusbar->showMessage("Левой кнопкой мыши дважды нажмите на файл, к которому вы хотите добавить тег");
 }
 
 void Manager::button3_clicked()
@@ -160,6 +190,11 @@ void Manager::button5_clicked()
   qDebug() << "Кнопка 5";
 }
 
+void Manager::get_full_path(const QModelIndex &index)
+{
+  qDebug() << controller.path_of_index(index);
+}
+
 void Manager::Debug__()
 {
  // qDebug() << PRO_FILE_PWD;
@@ -167,17 +202,24 @@ void Manager::Debug__()
 
 void Manager::resizeEvent(QResizeEvent* event)
 {
-  main_size = ui->centralwidget->geometry();
-  qDebug() << main_size.x() << main_size.y() << main_size.width() << main_size.height();
+  Q_UNUSED(event);
+  // получение размеров стека виджетов контента
+  content_size = content_widget->geometry();
+  tree_view->setColumnWidth(0, content_size.width() * 2 / 3);
+  tree_view->setColumnWidth(1, content_size.width() / 10);
+  tree_view->setColumnWidth(2, content_size.width() / 10);
+  tree_view->setColumnWidth(3, content_size.width() / 10);
+  qDebug() << content_size.x() << content_size.y() << content_size.width() << content_size.height();
 }
 
 void Manager::closeEvent(QCloseEvent *event)
 {
+  Q_UNUSED(event);
   // do some data saves or something else
   qApp->quit();
 }
 
-void Manager::read_json()
+/*void Manager::read_json()
 {
   QString value;
   json_file.setFileName(json_path);
@@ -240,10 +282,10 @@ void Manager::write_json()
   json_subObj.insert("type", ".txt");
   json_tagObj.insert("File Name 2", json_subObj);
   json_obj.insert("Tag_1", json_tagObj);
-  /*QJsonArray numbersArray;x
-  numbersArray.push_back("1");
-  numbersArray.push_back("2");
-  numbersArray.push_back("3"); */
+  //QJsonArray numbersArray;x
+ // numbersArray.push_back("1");
+  //numbersArray.push_back("2");
+ // numbersArray.push_back("3");
   QJsonDocument document(json_obj);
   json_string = document.toJson(QJsonDocument::Indented);
   //Записываем данные в файл
@@ -252,4 +294,4 @@ void Manager::write_json()
   QTextStream stream(&json_file);
   stream << json_string;
   json_file.close();
-}
+} */

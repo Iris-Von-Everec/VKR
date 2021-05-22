@@ -10,11 +10,17 @@ CONFIG += c++11
 DEFINES += PRO_FILE_PWD=$$sprintf("\"\\\"%1\\\"\"", $$_PRO_FILE_PWD_)
 
 SOURCES += \
+    controller.cpp \
     main.cpp \
-    manager.cpp
+    manager.cpp \
+    model.cpp \
+    tags.cpp
 
 HEADERS += \
-    manager.h
+    controller.h \
+    manager.h \
+    model.h \
+    tags.h
 
 FORMS += \
     manager.ui

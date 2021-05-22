@@ -3,10 +3,6 @@
 
 #include <QMainWindow>
 #include <QDesktopWidget>
-#include <QFileSystemModel>
-#include <QDirModel>
-#include <QTreeView>
-#include <QFileSystemModel>
 #include <QtGui>
 #include <QtCore>
 #include <QDir>
@@ -22,7 +18,10 @@
 #include <QScreen>
 #include <QWidget>
 #include <QPushButton>
-#include <QFile>
+#include <QStackedWidget>
+#include <QTreeView>
+
+#include "controller.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Manager; }
@@ -49,24 +48,25 @@ class Manager : public QMainWindow
     void button3_clicked();
     void button4_clicked();
     void button5_clicked();
+    void get_full_path(const QModelIndex &index);
 
-  protected:
+protected:
     virtual void resizeEvent(QResizeEvent *);
 
   private:
     Ui::Manager *ui;
-    QFileSystemModel *dirs_model, *files_model;
-    QString start_path, current_path, json_path, json_string;
-    QAction *exit;
-    QFile json_file;
-    QString hash_sum; //временно для проверки сравнения хэша
 
+    Controller controller;
+
+    QAction *exit;
     QSize scr_size;
-    QRect main_size;
-    QWidget *info_widget, *content_widget;
-    QHBoxLayout *main_layout, *content;
-    QVBoxLayout *info_panel;
+    QRect content_size;
+    QWidget *info_widget, *empty_widget;
+    QStackedWidget *content_widget;
+    QHBoxLayout *main_layout;
+    QVBoxLayout *info_layout;
     QPushButton *button1, *button2, *button3, *button4, *button5;
+    QTreeView *tree_view, *tags_tree;
 
     void Set_info_panel();
 
