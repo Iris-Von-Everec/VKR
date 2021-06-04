@@ -47,7 +47,7 @@ Manager::Manager(QWidget *parent)
     QImage back(str);
     Pal.setBrush(QPalette::Background, back);
     ui->centralwidget->setAutoFillBackground(true);
-    ui->centralwidget->setPalette(Pal);
+   // ui->centralwidget->setPalette(Pal);
 
     // стек виджетов
     empty_widget = new QWidget;
@@ -96,7 +96,7 @@ void Manager::Set_info_panel()
 
   // 1
   str = PRO_FILE_PWD;
-  str.append("/home.png");
+  str.append("/images/home_.png");
   button1 = new QPushButton;
   button1->setFixedSize(btnSize);
   button1->setIcon(QIcon(str));
@@ -106,7 +106,7 @@ void Manager::Set_info_panel()
 
   // 2
   str = PRO_FILE_PWD;
-  str.append("/hard.jpg");
+  str.append("/images/plus_.png");
   button2 = new QPushButton;
   button2->setFixedSize(btnSize);
   button2->setIcon(QIcon(str));
@@ -116,7 +116,7 @@ void Manager::Set_info_panel()
 
   // 3
   str = PRO_FILE_PWD;
-  str.append("/add.png");
+  str.append("/images/drive_.png");
   button3 = new QPushButton;
   button3->setFixedSize(btnSize);
   button3->setIcon(QIcon(str));
@@ -126,7 +126,7 @@ void Manager::Set_info_panel()
 
   // 4
   str = PRO_FILE_PWD;
-  str.append("/add.png");
+  str.append("/images/tag_.png");
   button4 = new QPushButton;
   button4->setFixedSize(btnSize);
   button4->setIcon(QIcon(str));
@@ -136,7 +136,7 @@ void Manager::Set_info_panel()
 
   // 5
   str = PRO_FILE_PWD;
-  str.append("/add.png");
+  str.append("/images/search_.png");
   button5 = new QPushButton;
   button5->setFixedSize(btnSize);
   button5->setIcon(QIcon(str));

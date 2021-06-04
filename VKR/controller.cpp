@@ -23,4 +23,5 @@ QFileSystemModel* Controller::Get_File_system()
 QString Controller::path_of_index(const QModelIndex &index)
 {
   return filemodel->filePath(index);
+
 }

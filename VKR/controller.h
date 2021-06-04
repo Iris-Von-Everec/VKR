@@ -2,7 +2,7 @@
 #define CONTROLLER_H
 
 #include <QFileSystemModel>
-#include <QDirModel>
+#include <QCryptographicHash>
 
 class Controller
 {
@@ -17,7 +17,7 @@ class Controller
     ~Controller();
     QFileSystemModel* Get_File_system();
     QString path_of_index(const QModelIndex &index);
-
+    //QCryptographicHash::Sha256
 };
 
 #endif // CONTROLLER_H

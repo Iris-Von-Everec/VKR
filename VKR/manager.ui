@@ -36,7 +36,13 @@
      <string>Справка</string>
     </property>
    </widget>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>Редактировать</string>
+    </property>
+   </widget>
    <addaction name="File"/>
+   <addaction name="menu"/>
    <addaction name="Spravka"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
