@@ -20,8 +20,11 @@
 #include <QPushButton>
 #include <QStackedWidget>
 #include <QTreeView>
+#include <QListView>
+#include <QLineEdit>
 
-#include "controller.h"
+#include "filesystem.h"
+#include "file_search.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Manager; }
@@ -35,7 +38,7 @@ class Manager : public QMainWindow
     Manager(QWidget *parent = nullptr);
     ~Manager();
     void Initialization();
-    void read_json(); // чтение json, переместить в нужный классь из Manager
+    void read_json(); // чтение json, переместить в нужный класс из Manager
     void write_json(); // запись json, переместить в нужный класс из Manager
     void Debug__();
     void closeEvent(QCloseEvent *event);
@@ -52,19 +55,20 @@ class Manager : public QMainWindow
 
 protected:
     virtual void resizeEvent(QResizeEvent *);
+    virtual void keyPressEvent(QKeyEvent *event);
 
   private:
     Ui::Manager *ui;
 
-    Controller controller;
+    FileSystem filesystem;
 
     QAction *exit;
     QSize scr_size;
     QRect content_size;
-    QWidget *info_widget, *empty_widget;
+    QWidget *info_widget, *empty_widget, *filesystem_search_widget;
     QStackedWidget *content_widget;
     QHBoxLayout *main_layout;
-    QVBoxLayout *info_layout;
+    QVBoxLayout *info_layout, *file_search_layout;
     QPushButton *button1, *button2, *button3, *button4, *button5;
     QTreeView *tree_view, *tags_tree;
 

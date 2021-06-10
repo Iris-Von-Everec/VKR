@@ -7,15 +7,6 @@ Manager::Manager(QWidget *parent)
 {
     ui->setupUi(this);
 
-
-    /* кусок кода с тестом парсинга json
-    json_path = PRO_FILE_PWD;
-    json_path.append("/test1.json");
-    qDebug() << json_path;
-    write_json();
-    read_json();
-    check_sum_of_files(); */
-
     // кнопка выхода в статус баре
     exit = new QAction("Выход", this);
     ui->menubar->addAction(exit);
@@ -50,15 +41,32 @@ Manager::Manager(QWidget *parent)
    // ui->centralwidget->setPalette(Pal);
 
     // стек виджетов
-    empty_widget = new QWidget;
+    empty_widget = new QWidget; // домашний экран
     content_widget->addWidget(empty_widget);
 
-    tree_view = new QTreeView;
-    tree_view->setModel(controller.Get_File_system());
-    tree_view->setRootIndex(controller.Get_File_system()->index("/"));
-
+    tree_view = new QTreeView; // дерево добавления тега
+    tree_view->setModel(filesystem.Get_File_system());
+    tree_view->setRootIndex(filesystem.Get_File_system()->index("/"));
     connect(tree_view, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(get_full_path(const QModelIndex &)));
     content_widget->addWidget(tree_view);
+
+  /* filesystem_search_widget = new QWidget; // дерево поиска файлов
+    file_list = new QListView;
+  //  file_list->setModel(filesystem.Get_File_system());
+  //  file_list->setRootIndex(filesystem.Get_File_system()->index("/"));
+    text_search_file = new QLineEdit();
+    text_search_file->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    text_search_file->setMaximumHeight(scr_size.height()/26);
+    QFont src_font("Times New Roman", 18);
+    text_search_file->setFont(src_font);
+    text_search_file->installEventFilter(this);
+    file_search_layout = new QVBoxLayout;
+    file_search_layout->addWidget(file_list);
+    file_search_layout->addWidget(text_search_file);
+    file_search_layout->setContentsMargins(0, 0, 0, 0);
+    file_search_layout->setSpacing(0);
+    filesystem_search_widget->setLayout(file_search_layout);
+    content_widget->addWidget(filesystem_search_widget); */
 
     main_layout = new QHBoxLayout;
     main_layout->addWidget(info_widget);
@@ -178,6 +186,8 @@ void Manager::button2_clicked()
 void Manager::button3_clicked()
 {
   qDebug() << "Кнопка 3";
+  content_widget->setCurrentIndex(2);
+  ui->statusbar->showMessage("Введите имя файла или директории для поиска. Нажмите Enter для поиска");
 }
 
 void Manager::button4_clicked()
@@ -192,7 +202,8 @@ void Manager::button5_clicked()
 
 void Manager::get_full_path(const QModelIndex &index)
 {
-  qDebug() << controller.path_of_index(index);
+  qDebug() << "name:" << filesystem.name_of_index(index);
+  qDebug() << "path:" << filesystem.path_of_index(index);
 }
 
 void Manager::Debug__()
@@ -205,93 +216,53 @@ void Manager::resizeEvent(QResizeEvent* event)
   Q_UNUSED(event);
   // получение размеров стека виджетов контента
   content_size = content_widget->geometry();
-  tree_view->setColumnWidth(0, content_size.width() * 2 / 3);
-  tree_view->setColumnWidth(1, content_size.width() / 10);
-  tree_view->setColumnWidth(2, content_size.width() / 10);
-  tree_view->setColumnWidth(3, content_size.width() / 10);
+  int col1, col2;
+  col1 = content_size.width() * 2 / 3;
+  col2 = content_size.width() / 10;
+  tree_view->setColumnWidth(0, col1);
+  tree_view->setColumnWidth(1, col2);
+  tree_view->setColumnWidth(2, col2);
+  tree_view->setColumnWidth(3, col2);
+
   qDebug() << content_size.x() << content_size.y() << content_size.width() << content_size.height();
+}
+
+void Manager::keyPressEvent(QKeyEvent *event)
+{
+  int key = event->key(); // код клавиши
+  int widget_index = content_widget->currentIndex();
+  switch(widget_index)
+  {
+    case 0:
+      break;
+    case 1:
+
+      break;
+
+    case 2:
+      if(key == Qt::Key_Enter || key == Qt::Key_Return)
+      {
+        qDebug() << "Enter";
+      }
+      break;
+
+    case 3:
+      break;
+
+    case 4:
+      break;
+
+    case 5:
+      break;
+
+    default:
+      break;
+  }
 }
 
 void Manager::closeEvent(QCloseEvent *event)
 {
   Q_UNUSED(event);
-  // do some data saves or something else
+  // сохранение данных перед выходом
   qApp->quit();
 }
-
-/*void Manager::read_json()
-{
-  QString value;
-  json_file.setFileName(json_path);
-  json_file.open(QIODevice::ReadOnly | QIODevice::Text);
-  value = json_file.readAll();
-  json_file.close();
-  QJsonDocument document = QJsonDocument::fromJson(value.toUtf8());
-  QJsonObject json_obj = document.object();
-  QJsonValue json_value = json_obj.value("Tag_1");
-  if (json_value.isObject())
-  {
-      QJsonObject file_obj = json_value.toObject();
-      QJsonValue file_value = file_obj.value("File Name 1");
-      if (file_value.isObject())
-        {
-          QJsonObject final_obj = file_value.toObject();
-          hash_sum = final_obj["Hash sum"].toString();
-          QString file_path = final_obj["Path"].toString();
-          QString file_type = final_obj["type"].toString();
-      //    qDebug() << hash_sum << file_path << file_type << "\n";
-        }
-      else
-        qDebug() << "Не считалось 2\n";
-  }
-  else
-    qDebug() << "Не считалось 1\n";
-}
-
-// Возвращает пустой QByteArray() в случае ошибки
-QByteArray fileChecksum(const QString &fileName, QCryptographicHash::Algorithm hashAlgorithm)
-  {
-    QFile f(fileName);
-    if (f.open(QFile::ReadOnly)) {
-        QCryptographicHash hash(hashAlgorithm);
-        if (hash.addData(&f)) {
-            return hash.result();
-        }
-    }
-    return QByteArray();
-  }
-
-void Manager::check_sum_of_files()
-{
-  QByteArray file_hash_array;
-  file_hash_array = fileChecksum(json_path, QCryptographicHash::Md5);
-  QString hash_string = QString(file_hash_array);
-  qDebug() << hash_string;
-}
-
-void Manager::write_json()
-{
-  QJsonObject json_obj, json_tagObj, json_subObj; // пока что без иерархии
-  json_subObj.insert("Hash sum", "qwerty12345");
-  json_subObj.insert("Path", PRO_FILE_PWD);
-  json_subObj.insert("type", ".json");
-  json_tagObj.insert("File Name 1", json_subObj);
-  json_obj.insert("Tag_1", json_tagObj);
-  json_subObj.insert("Hash sum", "zxcmd5sum");
-  json_subObj.insert("Path", PRO_FILE_PWD);
-  json_subObj.insert("type", ".txt");
-  json_tagObj.insert("File Name 2", json_subObj);
-  json_obj.insert("Tag_1", json_tagObj);
-  //QJsonArray numbersArray;x
- // numbersArray.push_back("1");
-  //numbersArray.push_back("2");
- // numbersArray.push_back("3");
-  QJsonDocument document(json_obj);
-  json_string = document.toJson(QJsonDocument::Indented);
-  //Записываем данные в файл
-  json_file.setFileName(json_path);
-  json_file.open(QIODevice::WriteOnly | QIODevice::Text);
-  QTextStream stream(&json_file);
-  stream << json_string;
-  json_file.close();
-} */
