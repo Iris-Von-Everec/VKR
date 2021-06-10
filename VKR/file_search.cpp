@@ -52,32 +52,25 @@
 
 #include "file_search.h"
 
-//! [17]
 enum { absoluteFileNameRole = Qt::UserRole + 1 };
-//! [17]
 
-//! [18]
 static inline QString fileNameOfItem(const QTableWidgetItem *item)
 {
     return item->data(absoluteFileNameRole).toString();
 }
-//! [18]
 
-//! [14]
 static inline void openFile(const QString &fileName)
 {
     QDesktopServices::openUrl(QUrl::fromLocalFile(fileName));
 }
-//! [14]
 
-//! [0]
 Window::Window(QWidget *parent)
     : QWidget(parent)
 {
-    setWindowTitle(tr("Find Files"));
-    QPushButton *browseButton = new QPushButton(tr("&Browse..."), this);
+    setWindowTitle(tr("Поиск файлов"));
+    QPushButton *browseButton = new QPushButton(tr("&Обзор..."), this);
     connect(browseButton, &QAbstractButton::clicked, this, &Window::browse);
-    findButton = new QPushButton(tr("&Find"), this);
+    findButton = new QPushButton(tr("&Поиск"), this);
     connect(findButton, &QAbstractButton::clicked, this, &Window::find);
 
     fileComboBox = createComboBox(tr("*"));
@@ -95,25 +88,21 @@ Window::Window(QWidget *parent)
     createFilesTable();
 
     QGridLayout *mainLayout = new QGridLayout(this);
-    mainLayout->addWidget(new QLabel(tr("Named:")), 0, 0);
+    mainLayout->addWidget(new QLabel(tr("Имя:")), 0, 0);
     mainLayout->addWidget(fileComboBox, 0, 1, 1, 2);
-    mainLayout->addWidget(new QLabel(tr("Containing text:")), 1, 0);
+    mainLayout->addWidget(new QLabel(tr("Содержит текст:")), 1, 0);
     mainLayout->addWidget(textComboBox, 1, 1, 1, 2);
-    mainLayout->addWidget(new QLabel(tr("In directory:")), 2, 0);
+    mainLayout->addWidget(new QLabel(tr("Директория:")), 2, 0);
     mainLayout->addWidget(directoryComboBox, 2, 1);
     mainLayout->addWidget(browseButton, 2, 2);
     mainLayout->addWidget(filesTable, 3, 0, 1, 3);
     mainLayout->addWidget(filesFoundLabel, 4, 0, 1, 2);
     mainLayout->addWidget(findButton, 4, 2);
-//! [0]
 
-//! [1]
     connect(new QShortcut(QKeySequence::Quit, this), &QShortcut::activated,
         qApp, &QApplication::quit);
-//! [1]
 }
 
-//! [2]
 void Window::browse()
 {
     QString directory =
@@ -125,7 +114,6 @@ void Window::browse()
         directoryComboBox->setCurrentIndex(directoryComboBox->findText(directory));
     }
 }
-//! [2]
 
 static void updateComboBox(QComboBox *comboBox)
 {
@@ -133,7 +121,6 @@ static void updateComboBox(QComboBox *comboBox)
         comboBox->addItem(comboBox->currentText());
 }
 
-//! [3]
 void Window::find()
 {
     filesTable->setRowCount(0);
@@ -142,13 +129,11 @@ void Window::find()
     QString text = textComboBox->currentText();
     QString path = QDir::cleanPath(directoryComboBox->currentText());
     currentDir = QDir(path);
-//! [3]
 
     updateComboBox(fileComboBox);
     updateComboBox(textComboBox);
     updateComboBox(directoryComboBox);
 
-//! [4]
     QStringList filter;
     if (!fileName.isEmpty())
         filter << fileName;
@@ -161,22 +146,19 @@ void Window::find()
     files.sort();
     showFiles(files);
 }
-//! [4]
 
 void Window::animateFindClick()
 {
     findButton->animateClick();
 }
 
-//! [5]
 QStringList Window::findFiles(const QStringList &files, const QString &text)
 {
     QProgressDialog progressDialog(this);
-    progressDialog.setCancelButtonText(tr("&Cancel"));
+    progressDialog.setCancelButtonText(tr("&Отмена"));
     progressDialog.setRange(0, files.size());
-    progressDialog.setWindowTitle(tr("Find Files"));
+    progressDialog.setWindowTitle(tr("Найдено файлов"));
 
-//! [5] //! [6]
     QMimeDatabase mimeDatabase;
     QStringList foundFiles;
 
@@ -184,16 +166,14 @@ QStringList Window::findFiles(const QStringList &files, const QString &text)
         progressDialog.setValue(i);
         progressDialog.setLabelText(tr("Searching file number %1 of %n...", nullptr, files.size()).arg(i));
         QCoreApplication::processEvents();
-//! [6]
 
         if (progressDialog.wasCanceled())
             break;
 
-//! [7]
         const QString fileName = files.at(i);
         const QMimeType mimeType = mimeDatabase.mimeTypeForFile(fileName);
-        if (mimeType.isValid() && !mimeType.inherits(QStringLiteral("text/plain"))) {
-            qWarning() << "Not searching binary file " << QDir::toNativeSeparators(fileName);
+        if (mimeType.isValid() && !mimeType.inherits(QStringLiteral("текст/обычный"))) {
+            qWarning() << "Не искать двоичный файл " << QDir::toNativeSeparators(fileName);
             continue;
         }
         QFile file(fileName);
@@ -213,9 +193,7 @@ QStringList Window::findFiles(const QStringList &files, const QString &text)
     }
     return foundFiles;
 }
-//! [7]
 
-//! [8]
 void Window::showFiles(const QStringList &paths)
 {
     for (const QString &filePath : paths) {
@@ -237,12 +215,10 @@ void Window::showFiles(const QStringList &paths)
         filesTable->setItem(row, 0, fileNameItem);
         filesTable->setItem(row, 1, sizeItem);
     }
-    filesFoundLabel->setText(tr("%n file(s) found (Double click on a file to open it)", nullptr, paths.size()));
+    filesFoundLabel->setText(tr("%n файл(ов) найдено (Дважды нажмите на файл, чтобы его открыть)", nullptr, paths.size()));
     filesFoundLabel->setWordWrap(true);
 }
-//! [8]
 
-//! [10]
 QComboBox *Window::createComboBox(const QString &text)
 {
     QComboBox *comboBox = new QComboBox;
@@ -251,32 +227,26 @@ QComboBox *Window::createComboBox(const QString &text)
     comboBox->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
     return comboBox;
 }
-//! [10]
 
-//! [11]
 void Window::createFilesTable()
 {
     filesTable = new QTableWidget(0, 2);
     filesTable->setSelectionBehavior(QAbstractItemView::SelectRows);
 
     QStringList labels;
-    labels << tr("Filename") << tr("Size");
+    labels << tr("Имя файла") << tr("Размер");
     filesTable->setHorizontalHeaderLabels(labels);
     filesTable->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
     filesTable->verticalHeader()->hide();
     filesTable->setShowGrid(false);
-//! [15]
     filesTable->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(filesTable, &QTableWidget::customContextMenuRequested,
             this, &Window::contextMenu);
     connect(filesTable, &QTableWidget::cellActivated,
             this, &Window::openFileOfItem);
-//! [15]
 }
-//! [11]
 
 
-//! [12]
 
 void Window::openFileOfItem(int row, int /* column */)
 {
@@ -284,9 +254,6 @@ void Window::openFileOfItem(int row, int /* column */)
     openFile(fileNameOfItem(item));
 }
 
-//! [12]
-
-//! [16]
 void Window::contextMenu(const QPoint &pos)
 {
     const QTableWidgetItem *item = filesTable->itemAt(pos);
@@ -294,9 +261,9 @@ void Window::contextMenu(const QPoint &pos)
         return;
     QMenu menu;
 #ifndef QT_NO_CLIPBOARD
-    QAction *copyAction = menu.addAction("Copy Name");
+    QAction *copyAction = menu.addAction("Копировать имя ");
 #endif
-    QAction *openAction = menu.addAction("Open");
+    QAction *openAction = menu.addAction("Открыть ");
     QAction *action = menu.exec(filesTable->mapToGlobal(pos));
     if (!action)
         return;
@@ -308,5 +275,3 @@ void Window::contextMenu(const QPoint &pos)
         QGuiApplication::clipboard()->setText(QDir::toNativeSeparators(fileName));
 #endif
 }
-//! [16]
-

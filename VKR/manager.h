@@ -61,6 +61,7 @@ protected:
     Ui::Manager *ui;
 
     FileSystem filesystem;
+    Window *explorer;
 
     QAction *exit;
     QSize scr_size;

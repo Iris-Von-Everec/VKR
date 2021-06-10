@@ -50,6 +50,9 @@ Manager::Manager(QWidget *parent)
     connect(tree_view, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(get_full_path(const QModelIndex &)));
     content_widget->addWidget(tree_view);
 
+    explorer = new Window;
+    content_widget->addWidget(explorer);
+
   /* filesystem_search_widget = new QWidget; // дерево поиска файлов
     file_list = new QListView;
   //  file_list->setModel(filesystem.Get_File_system());
