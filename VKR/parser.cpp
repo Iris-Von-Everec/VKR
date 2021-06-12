@@ -42,27 +42,6 @@ check_sum_of_files(); */
     qDebug() << "Не считалось 1\n";
 }
 
-// Возвращает пустой QByteArray() в случае ошибки
-QByteArray fileChecksum(const QString &fileName, QCryptographicHash::Algorithm hashAlgorithm)
-  {
-    QFile f(fileName);
-    if (f.open(QFile::ReadOnly)) {
-        QCryptographicHash hash(hashAlgorithm);
-        if (hash.addData(&f)) {
-            return hash.result();
-        }
-    }
-    return QByteArray();
-  }
-
-void Manager::check_sum_of_files()
-{
-  QByteArray file_hash_array;
-  file_hash_array = fileChecksum(json_path, QCryptographicHash::Md5);
-  QString hash_string = QString(file_hash_array);
-  qDebug() << hash_string;
-}
-
 void Manager::write_json()
 {
   QJsonObject json_obj, json_tagObj, json_subObj; // пока что без иерархии

@@ -4,8 +4,11 @@
 
 class Parser
 {
-public:
-  Parser();
+  public:
+    Parser();
+    ~Parser();
+  private:
+
 };
 
 #endif // PARSER_H

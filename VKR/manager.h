@@ -22,9 +22,13 @@
 #include <QTreeView>
 #include <QListView>
 #include <QLineEdit>
+#include <QMessageBox>
+#include <QStandardItemModel>
+#include <QMenu>
 
 #include "filesystem.h"
 #include "file_search.h"
+#include "data.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Manager; }
@@ -32,17 +36,15 @@ QT_END_NAMESPACE
 
 class Manager : public QMainWindow
 {
-    Q_OBJECT
+  Q_OBJECT
 
   public:
     Manager(QWidget *parent = nullptr);
     ~Manager();
-    void Initialization();
     void read_json(); // чтение json, переместить в нужный класс из Manager
     void write_json(); // запись json, переместить в нужный класс из Manager
     void Debug__();
     void closeEvent(QCloseEvent *event);
-    void check_sum_of_files();
 
   private slots:
     void clicked_exit();
@@ -52,6 +54,18 @@ class Manager : public QMainWindow
     void button4_clicked();
     void button5_clicked();
     void get_full_path(const QModelIndex &index);
+    void on_about_programm_triggered();
+    void on_about_aut_triggered();
+    void on_white_content_triggered();
+    void on_black_content_triggered();
+    void on_red_content_triggered();
+    void on_blue_content_triggered();
+    void on_white_panel_triggered();
+    void on_black_panel_triggered();
+    void on_red_panel_triggered();
+    void on_blue_panel_triggered();
+    void create_context_menu_tag(const QPoint &pos);
+
 
 protected:
     virtual void resizeEvent(QResizeEvent *);
@@ -71,9 +85,12 @@ protected:
     QHBoxLayout *main_layout;
     QVBoxLayout *info_layout, *file_search_layout;
     QPushButton *button1, *button2, *button3, *button4, *button5;
+    QStandardItemModel *tags_model;
+    QStandardItem *tag_item1, *tag_item2, *tag_item3, *root_item;
     QTreeView *tree_view, *tags_tree;
 
     void Set_info_panel();
-
+    void add_ex_tag();
+    void add_new_tag();
 };
 #endif // MANAGER_H

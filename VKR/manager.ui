@@ -35,17 +35,90 @@
     <property name="title">
      <string>Справка</string>
     </property>
+    <addaction name="about_programm"/>
+    <addaction name="about_aut"/>
    </widget>
    <widget class="QMenu" name="menu">
     <property name="title">
      <string>Редактировать</string>
     </property>
+    <widget class="QMenu" name="menu_2">
+     <property name="title">
+      <string>Цвет фона</string>
+     </property>
+     <addaction name="white_content"/>
+     <addaction name="black_content"/>
+     <addaction name="red_content"/>
+     <addaction name="blue_content"/>
+    </widget>
+    <widget class="QMenu" name="menu_3">
+     <property name="title">
+      <string>Цвет панели</string>
+     </property>
+     <addaction name="white_panel"/>
+     <addaction name="black_panel"/>
+     <addaction name="red_panel"/>
+     <addaction name="blue_panel"/>
+    </widget>
+    <addaction name="menu_2"/>
+    <addaction name="menu_3"/>
+    <addaction name="separator"/>
    </widget>
    <addaction name="File"/>
    <addaction name="menu"/>
    <addaction name="Spravka"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="about_programm">
+   <property name="text">
+    <string>О программе</string>
+   </property>
+  </action>
+  <action name="about_aut">
+   <property name="text">
+    <string>Об авторе</string>
+   </property>
+  </action>
+  <action name="white_content">
+   <property name="text">
+    <string>Белый</string>
+   </property>
+  </action>
+  <action name="black_content">
+   <property name="text">
+    <string>Черный</string>
+   </property>
+  </action>
+  <action name="red_content">
+   <property name="text">
+    <string>Красный</string>
+   </property>
+  </action>
+  <action name="blue_content">
+   <property name="text">
+    <string>Синий</string>
+   </property>
+  </action>
+  <action name="white_panel">
+   <property name="text">
+    <string>Белый</string>
+   </property>
+  </action>
+  <action name="black_panel">
+   <property name="text">
+    <string>Черный</string>
+   </property>
+  </action>
+  <action name="red_panel">
+   <property name="text">
+    <string>Красный</string>
+   </property>
+  </action>
+  <action name="blue_panel">
+   <property name="text">
+    <string>Синий</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

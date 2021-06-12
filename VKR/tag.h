@@ -17,6 +17,8 @@ class Tag
   public:
     Tag();
     ~Tag();
+    void update_name(QString new_name);
+
   private:
     Node tag;
 };

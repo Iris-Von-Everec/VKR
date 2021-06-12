@@ -7,6 +7,7 @@ Manager::Manager(QWidget *parent)
 {
     ui->setupUi(this);
 
+    setWindowTitle(tr("Теговый виртуальный файловый менеджер"));
     // кнопка выхода в статус баре
     exit = new QAction("Выход", this);
     ui->menubar->addAction(exit);
@@ -32,13 +33,14 @@ Manager::Manager(QWidget *parent)
     // content
     content_widget = new QStackedWidget;
     content_widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    QPalette Pal(palette());
+  /*  QPalette Pal(palette());
     str = PRO_FILE_PWD;
     str.append("/background.png");
     QImage back(str);
     Pal.setBrush(QPalette::Background, back);
     ui->centralwidget->setAutoFillBackground(true);
-   // ui->centralwidget->setPalette(Pal);
+    ui->centralwidget->setPalette(Pal); */
+
 
     // стек виджетов
     empty_widget = new QWidget; // домашний экран
@@ -47,31 +49,41 @@ Manager::Manager(QWidget *parent)
     tree_view = new QTreeView; // дерево добавления тега
     tree_view->setModel(filesystem.Get_File_system());
     tree_view->setRootIndex(filesystem.Get_File_system()->index("/"));
+    tree_view->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(tree_view, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(create_context_menu_tag(const QPoint &)));
     connect(tree_view, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(get_full_path(const QModelIndex &)));
     content_widget->addWidget(tree_view);
 
-    explorer = new Window;
+    explorer = new Window; // стандартный файловый менеджер
     content_widget->addWidget(explorer);
 
-  /* filesystem_search_widget = new QWidget; // дерево поиска файлов
-    file_list = new QListView;
-  //  file_list->setModel(filesystem.Get_File_system());
-  //  file_list->setRootIndex(filesystem.Get_File_system()->index("/"));
-    text_search_file = new QLineEdit();
-    text_search_file->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    text_search_file->setMaximumHeight(scr_size.height()/26);
-    QFont src_font("Times New Roman", 18);
-    text_search_file->setFont(src_font);
-    text_search_file->installEventFilter(this);
-    file_search_layout = new QVBoxLayout;
-    file_search_layout->addWidget(file_list);
-    file_search_layout->addWidget(text_search_file);
-    file_search_layout->setContentsMargins(0, 0, 0, 0);
-    file_search_layout->setSpacing(0);
-    filesystem_search_widget->setLayout(file_search_layout);
-    content_widget->addWidget(filesystem_search_widget); */
+    tags_tree = new QTreeView; // дерево тегов
+    tags_model = new QStandardItemModel;
+    tags_model->setHorizontalHeaderLabels(QStringList() << "Имя тега");
+    QStandardItem *item_0 = new QStandardItem("Тег 1");
+    QStandardItem *item_0_0 = new QStandardItem("Тег 1 1");
+    QStandardItem *item_1 = new QStandardItem("Тег 2");
+    QStandardItem *item_1_0 = new QStandardItem("Тег 2 1");
+    QStandardItem *item_1_0_0 = new QStandardItem("Тег 2 1 1");
 
-    main_layout = new QHBoxLayout;
+    // Root Item
+    QStandardItem * rootItem = tags_model->invisibleRootItem();
+
+    //Define the tree structure
+    rootItem->appendRow(item_0);
+    rootItem->appendRow(item_1);
+
+    item_0->appendRow(item_0_0);
+    item_1->appendRow(item_1_0);
+    item_1_0->appendRow(item_1_0_0);
+
+    //tags_tree->find()
+
+    tags_tree->setModel(tags_model);
+    tags_tree->show();
+    content_widget->addWidget(tags_tree);
+
+    main_layout = new QHBoxLayout; // основной слой
     main_layout->addWidget(info_widget);
     main_layout->addWidget(content_widget);
     main_layout->setContentsMargins(0, 0, 0, 0);
@@ -80,6 +92,39 @@ Manager::Manager(QWidget *parent)
     ui->centralwidget->setLayout(main_layout); // добавление основного layout на центральный виджет
     ui->statusbar->showMessage("Выберите действие");
    // this->showMaximized();
+}
+
+void Manager::create_context_menu_tag(const QPoint &pos)
+{
+  const QModelIndex item = tree_view->indexAt(pos);
+  if (!item.isValid())
+      return;
+  QMenu menu;
+  QAction *add_ex_tag = menu.addAction("Добавить существующий тег ");
+  QAction *add_new_tag = menu.addAction("Добавить новый тег ");
+  QAction *action = menu.exec(tree_view->mapToGlobal(pos));
+  if (!action)
+      return;
+  if(action == add_ex_tag)
+    this->add_ex_tag();
+  else
+    this->add_new_tag();
+}
+
+void Manager::add_ex_tag()
+{
+  QMessageBox msgBox;
+  msgBox.setWindowTitle("1 msg");
+  msgBox.setText("1 msg");
+  msgBox.exec();
+}
+
+void Manager::add_new_tag()
+{
+  QMessageBox msgBox;
+  msgBox.setWindowTitle("2 msg");
+  msgBox.setText("2 msg");
+  msgBox.exec();
 }
 
 Manager::~Manager()
@@ -162,11 +207,6 @@ void Manager::Set_info_panel()
   connect(button5, SIGNAL(clicked()), this, SLOT(button5_clicked()));
 }
 
-void Manager::Initialization()
-{
- // зачем? Инициализация подклассов
-}
-
 void Manager::clicked_exit()
 {
   this->close();
@@ -195,6 +235,9 @@ void Manager::button3_clicked()
 
 void Manager::button4_clicked()
 {
+  content_widget->setCurrentIndex(3);
+
+
   qDebug() << "Кнопка 4";
 }
 
@@ -268,4 +311,61 @@ void Manager::closeEvent(QCloseEvent *event)
   Q_UNUSED(event);
   // сохранение данных перед выходом
   qApp->quit();
+}
+
+void Manager::on_about_programm_triggered()
+{
+  QMessageBox msgBox;
+  msgBox.setWindowTitle("О программе");
+  msgBox.setText("Теговый виртуальный файловый менеджер\nOpen Source");
+  msgBox.exec();
+}
+
+void Manager::on_about_aut_triggered()
+{
+  QMessageBox msgBox;
+  msgBox.setWindowTitle("Об авторе");
+  msgBox.setText("Большаков Д.К.\nСтудент группы И974\nБГТУ ""Военмех"" им Д.Ф.Устинова");
+  msgBox.exec();
+}
+
+void Manager::on_white_content_triggered()
+{
+  content_widget->setStyleSheet("background-color: white;");
+}
+
+void Manager::on_black_content_triggered()
+{
+  content_widget->setStyleSheet("background-color: black;");
+}
+
+void Manager::on_red_content_triggered()
+{
+  content_widget->setStyleSheet("background-color: red;");
+}
+
+void Manager::on_blue_content_triggered()
+{
+  content_widget->setStyleSheet("background-color: blue;");
+}
+
+void Manager::on_white_panel_triggered()
+{
+  info_widget->setStyleSheet("background-color: white;");
+}
+
+
+void Manager::on_black_panel_triggered()
+{
+  info_widget->setStyleSheet("background-color: black;");
+}
+
+void Manager::on_red_panel_triggered()
+{
+  info_widget->setStyleSheet("background-color: red;");
+}
+
+void Manager::on_blue_panel_triggered()
+{
+  info_widget->setStyleSheet("background-color: blue;");
 }

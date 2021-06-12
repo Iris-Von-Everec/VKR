@@ -13,7 +13,8 @@ class Data
     Data();
     ~Data();
   private:
-
+    QVector <Tag> tags;
+    QVector <File> files;
 };
 
 #endif // DATA_H

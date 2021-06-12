@@ -164,7 +164,7 @@ QStringList Window::findFiles(const QStringList &files, const QString &text)
 
     for (int i = 0; i < files.size(); ++i) {
         progressDialog.setValue(i);
-        progressDialog.setLabelText(tr("Searching file number %1 of %n...", nullptr, files.size()).arg(i));
+        progressDialog.setLabelText(tr("Поиск файла номер %1 из %n...", nullptr, files.size()).arg(i));
         QCoreApplication::processEvents();
 
         if (progressDialog.wasCanceled())
